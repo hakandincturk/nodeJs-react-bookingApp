@@ -10,9 +10,10 @@ import {
   faCircleXmark,
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import { useLocation } from "react-router-dom";
+import { SearchContext } from "../../context/SearchContext";
 
 const Hotel = () => {
 
@@ -29,6 +30,20 @@ const Hotel = () => {
   useEffect(() => {
     setHotelDetail(data.data)
   }, [data])
+
+  const { dates, options } = useContext(SearchContext)
+  const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+  function dayDifference(date1, date2) {
+    const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    const diffDays = Math.ceil(timeDiff / MILLISECONDS_PER_DAY);
+    return diffDays;
+  }
+  let days;
+  try {
+    days = (dayDifference(dates[0].endDate, dates[0].startDate))
+  } catch (error) {
+    console.log(error.message)
+  }
 
   const handleOpen = (i) => {
     setSlideNumber(i);
@@ -52,75 +67,81 @@ const Hotel = () => {
       <Navbar />
       <Header type="list" />
       {
-        loading ? 'details loading, please wait.' : 
-        <div className="hotelContainer">
-        {open && (
-          <div className="slider">
-            <FontAwesomeIcon
-              icon={faCircleXmark}
-              className="close"
-              onClick={() => setOpen(false)}
-            />
-            <FontAwesomeIcon
-              icon={faCircleArrowLeft}
-              className="arrow"
-              onClick={() => handleMove("l")}
-            />
-            <div className="sliderWrapper">
-              <img src={hotelDetail.photos[slideNumber]} alt="" className="sliderImg" />
-            </div>
-            <FontAwesomeIcon
-              icon={faCircleArrowRight}
-              className="arrow"
-              onClick={() => handleMove("r")}
-            />
-          </div>
-        )}
-        <div className="hotelWrapper">
-          <button className="bookNow">Reserve or Book Now!</button>
-          <h1 className="hotelTitle">{hotelDetail.name}</h1>
-          <div className="hotelAddress">
-            <FontAwesomeIcon icon={faLocationDot} />
-            <span>{hotelDetail.address}</span>
-          </div>
-          <span className="hotelDistance">
-            Excellent location – {hotelDetail.distance}m from center
-          </span>
-          <span className="hotelPriceHighlight">
-            Book a stay over ${hotelDetail.cheapestPrice} at this property and get a free airport taxi
-          </span>
-          <div className="hotelImages">
-            {hotelDetail.photos?.map((photo, i) => (
-              <div className="hotelImgWrapper" key={i}>
-                <img
-                  onClick={() => handleOpen(i)}
-                  src={photo}
-                  alt=""
-                  className="hotelImg"
-                />
+        loading ? 'details loading, please wait.' :
+        !hotelDetail ? 'details not loaded.' :  
+          <div className="hotelContainer">
+          {open && (
+            <div className="slider">
+              <FontAwesomeIcon
+                icon={faCircleXmark}
+                className="close"
+                onClick={() => setOpen(false)}
+              />
+              <FontAwesomeIcon
+                icon={faCircleArrowLeft}
+                className="arrow"
+                onClick={() => handleMove("l")}
+              />
+              <div className="sliderWrapper">
+                <img src={hotelDetail.photos[slideNumber]} alt="" className="sliderImg" />
               </div>
-            ))}
-          </div>
-          <div className="hotelDetails">
-            <div className="hotelDetailsTexts">
-              <h1 className="hotelTitle">{hotelDetail.title}</h1>
-              <p className="hotelDesc">{hotelDetail.desc}</p>
+              <FontAwesomeIcon
+                icon={faCircleArrowRight}
+                className="arrow"
+                onClick={() => handleMove("r")}
+              />
             </div>
-            <div className="hotelDetailsPrice">
-              <h1>Perfect for a 9-night stay!</h1>
-              <span>
-                Located in the real heart of Krakow, this property has an
-                excellent location score of 9.8!
-              </span>
-              <h2>
-                <b>$945</b> (9 nights)
-              </h2>
-              <button>Reserve or Book Now!</button>
+          )}
+          <div className="hotelWrapper">
+            <button className="bookNow">Reserve or Book Now!</button>
+            <h1 className="hotelTitle">{hotelDetail.name}</h1>
+            <div className="hotelAddress">
+              <FontAwesomeIcon icon={faLocationDot} />
+              <span>{hotelDetail.address}</span>
+            </div>
+            <span className="hotelDistance">
+              Excellent location – {hotelDetail.distance}m from center
+            </span>
+            <span className="hotelPriceHighlight">
+              Book a stay over ${hotelDetail.cheapestPrice} at this property and get a free airport taxi
+            </span>
+            <div className="hotelImages">
+              {hotelDetail.photos?.map((photo, i) => (
+                <div className="hotelImgWrapper" key={i}>
+                  <img
+                    onClick={() => handleOpen(i)}
+                    src={photo}
+                    alt=""
+                    className="hotelImg"
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="hotelDetails">
+              <div className="hotelDetailsTexts">
+                <h1 className="hotelTitle">{hotelDetail.title}</h1>
+                <p className="hotelDesc">{hotelDetail.desc}</p>
+              </div>
+              <div className="hotelDetailsPrice">
+                <h1>Perfect for a {days}-night stay!</h1>
+                <span>
+                  Located in the real heart of Krakow, this property has an
+                  excellent location score of 9.8!
+                </span>
+                <h2>
+                  {
+                    !days ? '0' :
+                      <>
+                        <b>${days * hotelDetail.cheapestPrice * options.room}</b> ({days} nights)
+                      </> 
+                  }
+                </h2>
+                <button>Reserve or Book Now!</button>
+              </div>
             </div>
           </div>
-        </div>
-        <MailList />
-        <Footer />
+          <MailList />
+          <Footer />
         </div>
       }
     </div>

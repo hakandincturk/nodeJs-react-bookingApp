@@ -13,8 +13,6 @@ const FeaturedProperties = () => {
     setLoadingState(false)
   }, [data])
   
-  console.log(featuredList)
-
   return (
     <div className="fp">
       { loadingState ? 'Featured List is loading, please wait..' :
