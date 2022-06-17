@@ -24,14 +24,14 @@ export const register = async (req, res, next) => {
 	}
 };
 
-export const login = async (req, res, next) => {
+export const login = async (req, res) => {
 	try {
 		const user = await User.findOne({username: req.body.username});
-		if (!user) return next(createError(404, 'wrong password or username!!'));
+		if (!user) res.status(400).json({type: false, message: 'wrong password or username'});
     
 		const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
 		if (!isPasswordCorrect)
-			return next(createError(404, 'wrong password or username'));
+			return res.status(400).json({type: false, message: 'wrong password or username'});
 
 		const token = jwt.sign({id: user.id, isAdmin: user.isAdmin}, process.env.JWT_SECRET, {expiresIn: 86400});
 

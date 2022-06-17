@@ -26,7 +26,8 @@ const Login = () => {
         dispatch({type: "LOGIN_SUCCESS", payload: res.data})
         
       } catch (error) {
-        dispatch({type: "LOGIN_FAIL"});
+        //TODO return wrong username or password
+        dispatch({type: "LOGIN_FAIL", payload: err.response.data});
       }
   }
 
