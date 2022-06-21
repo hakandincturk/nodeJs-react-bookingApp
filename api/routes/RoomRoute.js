@@ -1,5 +1,12 @@
 import express from 'express';
-import { createRoom, deleteRoom, getRoom, getRooms, updateRoom } from '../controllers/RoomController';
+import { 
+	createRoom,
+	deleteRoom,
+	getRoom,
+	getRooms,
+	updateRoom,
+	updateRoomAvailabilty
+} from '../controllers/RoomController';
 
 import { verifyAdmin } from '../utils/verifyToken';
 
@@ -10,6 +17,7 @@ app.post('/:hotelid', verifyAdmin, createRoom);
 
 //UPDATE
 app.put('/:id', verifyAdmin, updateRoom);
+app.put('/availability/:id', updateRoomAvailabilty);
 
 //DELETE
 app.delete('/:id/:hotelid', verifyAdmin, deleteRoom);

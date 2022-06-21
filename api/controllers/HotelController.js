@@ -1,4 +1,5 @@
 import Hotel from '../models/Hotel';
+import Room from '../models/Room';
 
 export const createHotel = async (req, res) => {
 	const newHotel = new Hotel(req.body);
@@ -92,6 +93,27 @@ export const countByType = async (req, res) => {
 				{ type: 'villas', count: villaCount }, 
 				{ type: 'cabins', count: cabinCount } 
 			]});
+	}
+	catch (error) {
+		res.status(400).json({type: false, message: error.message});
+	} 
+};
+
+export const getHotelRooms = async (req, res) => {
+	try {
+
+		const hotel = await Hotel.findById(req.params.id);
+
+		// eslint-disable-next-line no-undef
+		const list = await Promise.all(hotel.rooms.map(room => {
+			return Room.findById(room);
+		}));
+
+		res.status(200).json({
+			type: true,
+			message: 'succesfull',
+			data: list
+		});
 	}
 	catch (error) {
 		res.status(400).json({type: false, message: error.message});

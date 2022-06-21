@@ -10,6 +10,7 @@ export const AuthContext = createContext(INITIAL_STATE);
 const AuthReducer = (state, action) => {
   switch (action.type) {
     case "LOGIN_START":
+      console.log("loginStart_CONTEX")
       return {
         user: null,
         loading: true,
@@ -17,6 +18,7 @@ const AuthReducer = (state, action) => {
       };
 
     case "LOGIN_SUCCESS":
+      console.log("loginSuccess_CONTEX")
       return {
         user: action.payload,
         loading: false,
@@ -24,6 +26,7 @@ const AuthReducer = (state, action) => {
       };
 
     case "LOGIN_FAIL":
+      console.log("loginFail_CONTEX")
       return {
         user: null,
         loading: false,
@@ -31,6 +34,7 @@ const AuthReducer = (state, action) => {
       };
 
     case "LOGOUT":
+      console.log("LOGOUT_CONTEX")
       return {
         user: null,
         loading: false,

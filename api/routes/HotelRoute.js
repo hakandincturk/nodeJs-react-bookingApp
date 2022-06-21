@@ -6,6 +6,7 @@ import {
 	createHotel,
 	deleteHotel,
 	getHotel,
+	getHotelRooms,
 	getHotels,
 	updateHotel
 } from '../controllers/HotelController';
@@ -30,6 +31,6 @@ app.get('/', getHotels);
 
 app.get('/countByCity', countByCity);
 app.get('/countByType', countByType);
-app.get('/', getHotels);
+app.get('/rooms/:id', getHotelRooms);
 
 module.exports = app;

@@ -27,20 +27,20 @@ export const register = async (req, res, next) => {
 export const login = async (req, res) => {
 	try {
 		const user = await User.findOne({username: req.body.username});
-		if (!user) res.status(400).json({type: false, message: 'wrong password or username'});
+		if (!user) res.status(404).json({type: false, message: 'wrong password or username'});
     
 		const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
 		if (!isPasswordCorrect)
-			return res.status(400).json({type: false, message: 'wrong password or username'});
+			return res.status(404).json({type: false, message: 'wrong password or username'});
 
 		const token = jwt.sign({id: user.id, isAdmin: user.isAdmin}, process.env.JWT_SECRET, {expiresIn: 86400});
 
 		const {password, isAdmin, ...otherDetails } = user._doc;
 
 		res
-			.cookie('access_token', token, {httpOnly: true})
+			.cookie('access_token', token, {httpOnly: true, credantials: true})
 			.status(200)
-			.json({type: true, message: 'successfull', data: otherDetails});
+			.json({type: true, message: 'successfully', data: otherDetails});
 	}
 	catch (error) {
 		res.status(400).json({type: false, message: error.message});
