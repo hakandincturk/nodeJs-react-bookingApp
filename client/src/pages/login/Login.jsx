@@ -28,7 +28,7 @@ const Login = () => {
         const res = await axios.post("/auth/login", credentials);
         if(!res.data.type) dispatch({type: "LOGIN_FAIL", payload: res.data.message});
         else {
-          dispatch({type: "LOGIN_SUCCESS", payload: res.data.data})
+          dispatch({type: "LOGIN_SUCCESS", payload: res.data.data.details})
           navigate('/');
         }
         

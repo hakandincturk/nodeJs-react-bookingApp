@@ -31,7 +31,7 @@ const connectDb = async () => {
 };
 
 mongoose.connection.on('disconnected', () => {
-	error({message: 'mongoDB disconnected', badge: true});
+	error({message: 'mongoDB disconnectedd', badge: true});
 });
 
 //middlewares

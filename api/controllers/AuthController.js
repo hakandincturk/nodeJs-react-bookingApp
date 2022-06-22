@@ -13,7 +13,11 @@ export const register = async (req, res, next) => {
 		const newUser = new User({
 			username: req.body.username,
 			email: req.body.email,
-			password: hash
+			password: hash,
+			country: req.body.country,
+			city: req.body.city,
+			phone: req.body.phone,
+			img: req.body.img ?? null
 		});
 
 		await newUser.save();
@@ -38,9 +42,9 @@ export const login = async (req, res) => {
 		const {password, isAdmin, ...otherDetails } = user._doc;
 
 		res
-			.cookie('access_token', token, {httpOnly: true, credantials: true})
+			.cookie('access_token', token, {httpOnly: true})
 			.status(200)
-			.json({type: true, message: 'successfully', data: otherDetails});
+			.json({type: true, message: 'successfully', data: {details: otherDetails, isAdmin, token}});
 	}
 	catch (error) {
 		res.status(400).json({type: false, message: error.message});

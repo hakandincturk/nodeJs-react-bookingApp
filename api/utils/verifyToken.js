@@ -1,7 +1,11 @@
 import jwt from 'jsonwebtoken';
 
 export const verifyToken = (req, res, next) => {
-	const token = req.cookies.access_token;
+	// const token = req.cookies.access_token;
+	// eslint-disable-next-line max-len
+	const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYTg5MGFhMjJmNjFiNDAxN2UwOGIxMiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY1NTgyMzI0NywiZXhwIjoxNjU1OTA5NjQ3fQ.zRSRvyHi8fwtv8V7z7rAtY7eTP9DML5KjdrVmsFkvu0';
+
+	console.log(token);
 
 	if (!token) 
 		return res.status(400).json({type: false, message: 'not authanticated'});
